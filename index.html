@@ -126,7 +126,7 @@
           <div className="game">
             <GameInfo
               isDrow={isDrow}
-              winnerSequence={winnerSequence}
+              winnerSymbol={winnerSymbol}
               currentStep={currentStep}
             />
             <div className="game-field">
@@ -145,11 +145,22 @@
         );
       }
 
-      function GameInfo({ isDrow, winnerSequence, currentStep }) {
+      function GameInfo({ isDrow, winnerSymbol, currentStep }) {
+        if (isDrow) {
+          return <div className="game-info">Ничья</div>;
+        }
+
+        if (winnerSymbol) {
+          return (
+            <div className="game-info">
+              Победитель: <GameSymbol symbol={winnerSymbol} />
+            </div>
+          );
+        }
+
         return (
           <div className="game-info">
-            {isDrow ? 'Ничья' : winnerSequence ? 'Победитель: ' : 'Ход: '}
-            {!isDrow && <GameSymbol symbol={winnerSymbol ?? currentStep} />}
+            Ход: <GameSymbol symbol={currentStep} />
           </div>
         );
       }
