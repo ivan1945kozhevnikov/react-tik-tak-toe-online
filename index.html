@@ -109,6 +109,12 @@
           setWinnerSequence(winner);
         };
 
+        const handleResetClick = () => {
+          setCells(Array.from({ length: 9 }, () => null));
+          setCurrentStep(SYMBOL_X);
+          setWinnerSequence(undefined);
+        };
+
         const renderSymbol = (symbol) => (
           <span className={`symbol ${getSymbolClassName(symbol)}`}>
             {symbol}
@@ -119,19 +125,16 @@
           ? cells[winnerSequence[0]]
           : undefined;
 
-        const isDrow = cells.every((item) => !!item) ? true : false;
-
-        const resetClick = () => {
-          setCells([null, null, null, null, null, null, null, null, null]);
-        };
+        const isDrow =
+          !winnerSequence && cells.filter((value) => value).length === 9;
 
         return (
           <div className="game">
-            <div className="game-info">
-              {winnerSequence ? 'Победитель: ' : 'Ход: '}
-              {renderSymbol(winnerSymbol ?? currentStep)}
-              {isDrow ? 'Ничья' : ''}
-            </div>
+            <GameInfo
+              isDrow={isDrow}
+              winnerSequence={winnerSequence}
+              currentStep={currentStep}
+            />
             <div className="game-field">
               {cells.map((symbol, index) => {
                 const isWinner = winnerSequence?.includes(index);
@@ -146,7 +149,18 @@
                 );
               })}
             </div>
-            <button onClick={resetClick}>Сбросить</button>
+            <button className="reset" onClick={handleResetClick}>
+              Сбросить
+            </button>
+          </div>
+        );
+      }
+
+      function GameInfo({ isDrow, winnerSequence, currentStep }) {
+        return (
+          <div className="game-info">
+            {isDrow ? 'Ничья' : winnerSequence ? 'Победитель: ' : 'Ход: '}
+            {!isDrow && renderSymbol(winnerSymbol ?? currentStep)}
           </div>
         );
       }
