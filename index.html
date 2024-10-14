@@ -130,18 +130,13 @@
               currentStep={currentStep}
             />
             <div className="game-field">
-              {cells.map((symbol, index) => {
-                const isWinner = winnerSequence?.includes(index);
-                return (
-                  <button
-                    key={index}
-                    onClick={() => handleCellClick(index)}
-                    className={`cell ${isWinner ? 'cell--win' : ''}`}
-                  >
-                    {symbol ? renderSymbol(symbol) : null}
-                  </button>
-                );
-              })}
+              {cells.map((symbol, index) => (
+                <GameCell
+                  symbol={symbol}
+                  isWinner={winnerSequence?.includes(index)}
+                  onClick={() => handleCellClick(index)}
+                />
+              ))}
             </div>
             <button className="reset" onClick={handleResetClick}>
               Сбросить
@@ -156,6 +151,17 @@
             {isDrow ? 'Ничья' : winnerSequence ? 'Победитель: ' : 'Ход: '}
             {!isDrow && <GameSymbol symbol={winnerSymbol ?? currentStep} />}
           </div>
+        );
+      }
+
+      function GameCell({ isWinner, onClick, symbol }) {
+        return (
+          <button
+            onClick={onClick}
+            className={`cell ${isWinner ? 'cell--win' : ''}`}
+          >
+            {symbol ? <GameSymbol symbol={symbol} /> : null}
+          </button>
         );
       }
 
