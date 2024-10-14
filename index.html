@@ -31,6 +31,7 @@
         display: grid;
         grid-template-columns: repeat(3, 30px);
         grid-template-rows: repeat(3, 30px);
+        margin-bottom: 20px;
       }
 
       .symbol--x {
@@ -94,14 +95,8 @@
           return '';
         };
 
-        const renderSymbol = (symbol) => (
-          <span className={`symbol ${getSymbolClassName(symbol)}`}>
-            {symbol}
-          </span>
-        );
-
         const handleCellClick = (index) => {
-          if (cells[index]) return;
+          if (cells[index] || winnerSequence) return;
 
           const cellsCopy = cells.slice();
           cellsCopy[index] = currentStep;
@@ -114,9 +109,29 @@
           setWinnerSequence(winner);
         };
 
+        const renderSymbol = (symbol) => (
+          <span className={`symbol ${getSymbolClassName(symbol)}`}>
+            {symbol}
+          </span>
+        );
+
+        const winnerSymbol = winnerSequence
+          ? cells[winnerSequence[0]]
+          : undefined;
+
+        const isDrow = cells.every((item) => !!item) ? true : false;
+
+        const resetClick = () => {
+          setCells([null, null, null, null, null, null, null, null, null]);
+        };
+
         return (
           <div className="game">
-            <div className="game-info">Ход: {renderSymbol(currentStep)}</div>
+            <div className="game-info">
+              {winnerSequence ? 'Победитель: ' : 'Ход: '}
+              {renderSymbol(winnerSymbol ?? currentStep)}
+              {isDrow ? 'Ничья' : ''}
+            </div>
             <div className="game-field">
               {cells.map((symbol, index) => {
                 const isWinner = winnerSequence?.includes(index);
@@ -131,6 +146,7 @@
                 );
               })}
             </div>
+            <button onClick={resetClick}>Сбросить</button>
           </div>
         );
       }
