@@ -89,12 +89,6 @@
         const [currentStep, setCurrentStep] = React.useState(SYMBOL_O);
         const [winnerSequence, setWinnerSequence] = React.useState();
 
-        const getSymbolClassName = (symbol) => {
-          if (symbol === SYMBOL_O) return 'symbol--o';
-          if (symbol === SYMBOL_X) return 'symbol--x';
-          return '';
-        };
-
         const handleCellClick = (index) => {
           if (cells[index] || winnerSequence) return;
 
@@ -160,8 +154,22 @@
         return (
           <div className="game-info">
             {isDrow ? 'Ничья' : winnerSequence ? 'Победитель: ' : 'Ход: '}
-            {!isDrow && renderSymbol(winnerSymbol ?? currentStep)}
+            {!isDrow && <GameSymbol symbol={winnerSymbol ?? currentStep} />}
           </div>
+        );
+      }
+
+      function GameSymbol({ symbol }) {
+        const getSymbolClassName = (symbol) => {
+          if (symbol === SYMBOL_O) return 'symbol--o';
+          if (symbol === SYMBOL_X) return 'symbol--x';
+          return '';
+        };
+
+        return (
+          <span className={`symbol ${getSymbolClassName(symbol)}`}>
+            {symbol}
+          </span>
         );
       }
 
