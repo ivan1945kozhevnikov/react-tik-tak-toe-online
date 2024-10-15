@@ -73,7 +73,7 @@
         }
       };
 
-      function App() {
+      function useGameState() {
         const [state, setState] = React.useState(SYMBOL_O);
         const [cells, setCells] = React.useState([
           null,
@@ -109,18 +109,34 @@
           setWinnerSequence(undefined);
         };
 
-        const renderSymbol = (symbol) => (
-          <span className={`symbol ${getSymbolClassName(symbol)}`}>
-            {symbol}
-          </span>
-        );
-
         const winnerSymbol = winnerSequence
           ? cells[winnerSequence[0]]
           : undefined;
 
         const isDrow =
           !winnerSequence && cells.filter((value) => value).length === 9;
+
+        return {
+          cells,
+          currentStep,
+          winnerSequence,
+          handleCellClick,
+          handleResetClick,
+          winnerSymbol,
+          isDrow,
+        };
+      }
+
+      function App() {
+        const {
+          cells,
+          currentStep,
+          winnerSequence,
+          handleCellClick,
+          handleResetClick,
+          winnerSymbol,
+          isDrow,
+        } = useGameState();
 
         return (
           <div className="game">
